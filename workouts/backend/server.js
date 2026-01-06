@@ -1,5 +1,5 @@
-// server.js
 import express from 'express';
+import mongoose from 'mongoose';
 import workoutRoutes from './src/routes/workoutRoutes.js';
 
 const app = express();
@@ -13,7 +13,7 @@ app.use('/api/workouts', workoutRoutes);
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Backend API draait!',
     endpoints: {
       workouts: '/api/workouts'
@@ -21,7 +21,12 @@ app.get('/', (req, res) => {
   });
 });
 
-// Start server
+// Connect MongoDB (non-blocking for dev)
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Verbonden met MongoDB'))
+  .catch(err => console.error('❌ MongoDB fout:', err.message));
+
+// Start server ONCE
 app.listen(PORT, () => {
-  console.log(`Server draait op http://localhost:${PORT}`);
+  console.log(`🚀 Server draait op http://localhost:${PORT}`);
 });

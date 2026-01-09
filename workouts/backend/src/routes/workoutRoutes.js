@@ -1,72 +1,25 @@
-// src/routes/workoutRoutes.js
-import Workout from '../models/Workout.js';
 import express from 'express';
-import mongoose from 'mongoose';
+import { 
+  getAllWorkouts, 
+  getWorkoutById, 
+  createWorkout 
+} from '../controllers/workoutController.js';
 
-// Maak router
 const router = express.Router();
 
 // GET alle workouts
-router.get('/', async (req, res) => {
-  try {
-    const workouts = await Workout.find({}).sort({ createdAt: -1 });
-    res.status(200).json(workouts);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+router.get('/', getAllWorkouts);
 
 // GET één workout
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  // Check of ID geldig is
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: 'Ongeldig workout ID' });
-  }
-
-  try {
-    const workout = await Workout.findById(id);
-
-    if (!workout) {
-      return res.status(404).json({ error: 'Workout niet gevonden' });
-    }
-
-    res.status(200).json(workout);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-// GET één workout
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `GET workout ${id}` });
-});
+router.get('/:id', getWorkoutById);
 
 // POST nieuwe workout
-router.post('/', async (req, res) => {
-  const { title, load, reps } = req.body;
+router.post('/', createWorkout);
 
-  try {
-    const workout = await Workout.create({ title, reps, load });
-    res.status(201).json(workout);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+// PATCH workout (later)
+// router.patch('/:id', updateWorkout);
 
-// PATCH workout
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `PATCH workout ${id}` });
-});
+// DELETE workout (later)
+// router.delete('/:id', deleteWorkout);
 
-// DELETE workout
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `DELETE workout ${id}` });
-});
-
-
-// Exporteer router
 export default router;

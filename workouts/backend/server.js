@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import workoutRoutes from './src/routes/workoutRoutes.js';
+import authRoutes from './src/routes/authRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -14,8 +15,7 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 
-// Routes
-app.use('/api/workouts', workoutRoutes);
+
 
 // Test route
 app.get('/', (req, res) => {
@@ -31,6 +31,10 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Verbonden met MongoDB'))
   .catch(err => console.error('❌ MongoDB fout:', err.message));
+  
+  // Routes
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start server ONCE
 app.listen(PORT, () => {

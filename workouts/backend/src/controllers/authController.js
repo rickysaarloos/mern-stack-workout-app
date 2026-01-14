@@ -41,8 +41,16 @@ export const register = async (req, res) => {
         res.status(201).json({ email: user.email, token });
 
     } catch (error) {
-        res.status(500).json({ error: 'Server error' });
+    console.error(error);
+
+    // Duplicate email error
+    if (error.code === 11000) {
+        return res.status(400).json({ error: 'Email is al in gebruik' });
     }
+
+    res.status(500).json({ error: 'Server error' });
+}
+
 };
 
 // LOGIN - bestaande gebruiker inloggen
